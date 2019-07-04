@@ -72,3 +72,49 @@ just like debit function, this function create the payment but user must fill th
 ```
 
 this example will show the HTML of your browser via desktop platform, in android you can use WebView
+
+# Faspay Credit Capture Payment
+```java
+    String html = new CaptureRequestWrapperProd(new TestUserBaruCredit(), "c0f4dbe47d27490e81a03ee771be6b47", "110B90DB-DA6C-4FEC-8ACD-C1DBF78A2E61", 10000, "ha", "haha@haha.com", "ddddd ", "<<URL NOTIFY>>").generateHtml();
+        try {
+            File temp = File.createTempFile(UUID.randomUUID().toString(), ".html");
+
+            FileOutputStream fos = new FileOutputStream(temp);
+            fos.write(html.getBytes());
+            fos.flush();
+            fos.close();
+            System.out.println();
+            System.out.println(temp.getAbsolutePath());
+           // openFile(temp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+```
+
+this example will show the HTML of your browser via desktop platform, in android you can use WebView
+
+
+# Faspay Credit Inquiry  Payment
+
+this example will generate the HTML of your browser via desktop platform, in android you can use WebView
+
+```java
+    FaspayConfigCredit conf = new FaspayConfigCreditProd();
+    FaspayUserCredit credit = new TestUserBaruCredit();
+    InquiryRequestCredit d = new InquiryRequestCreditWrapper(conf, credit, "e5f95232e08446cabda1b10ce6deb579", 10000);
+    d.generateHtml()
+```
+
+
+
+# Faspay Credit Refund  Payment
+this example will generate the HTML of your browser via desktop platform, in android you can use WebView
+```java
+String html = new RefundRequestWrapperProd(new TetsUser2(), "64ddf6a2dc1347dca59c029e8ea52e30", "FA9A8C87-A5C0-480C-88E2-1C48DC0D55B9", 100000, "merhcant test CC", "haha@haha.com", "ddddd ", "<<URL NOTIFY>>", 100000).generateHtml();
+```
+
+```java
+this example will generate the HTML of your browser via desktop platform, in android you can use WebView
+# Faspay Credit Void  Payment
+String html = new VoidRequestWrapperProd(new TestUserBaruCredit(), "e5f95232e08446cabda1b10ce6deb579", "042621B9-0FE3-4FDD-9350-97A4C931FF85", 10000, "ha", "haha@haha.com", "ddddd ", "<<URL NOTIFY>>").generateHtml();
+```
