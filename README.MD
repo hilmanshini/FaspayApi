@@ -51,7 +51,7 @@ FaspayConfigDebit mFaspayConfig = new FaspayConfigDebitDev(mTestFaspayUser);
 ```
 
 # Faspay Debit Service Inquiry Payment Channel
-
+this function is needed to get payment channel based on your purcahse
 this phase are implementation of class FaspayInquiryPCService to declare, write it as follows:
 
 ```java
@@ -77,6 +77,103 @@ service.inquiryPaymentChannel(new FaspayInquiryPCService.FaspayInquiryServiceCal
                 System.out.println(mUnregisteredError.getResponse_error().getResponse_code());
 
             }
+        });
+```
+
+
+
+
+# Faspay Debit Service Inquiry Payment Channel
+this function is needed to get payment channel based on your purcahse
+this phase are implementation of class FaspayInquiryPCService to declare, write it as follows:
+
+```java
+FaspayInquiryService service = new FaspayInquiryPCServiceImpl(mFaspayConfig);
+service.inquiryPaymentChannel(new FaspayInquiryPCService.FaspayInquiryServiceCallback() {
+            @Override
+            public void onGetPaymentChannel(List<FaspayPaymentChannel> channel) {
+                for (FaspayPaymentChannel faspayPaymentChannel : channel) {
+                    System.out.println(faspayPaymentChannel.getPg_code() + " " + faspayPaymentChannel.getPg_name());
+
+                }
+
+            }
+
+            @Override
+            public void onErrorGetPaymentChannel(Exception e) {
+                e.printStackTrace();
+
+            }
+
+            @Override
+            public void onUserNotRegistered(UnregisteredError mUnregisteredError) {
+                System.out.println(mUnregisteredError.getResponse_error().getResponse_code());
+
+            }
+        });
+```
+
+
+
+
+# Faspay Debit Create Payment
+this function is needed for you to create payment 
+
+```java
+    //from previous code
+    TestFaspayUser mTestFaspayUser = new TestFaspayUser();
+    FaspayConfigDebit mFaspayConfig = new FaspayConfigDebitDev(mTestFaspayUser);
+
+    //from inquiry payment channel,or mock it
+    FaspayPaymentChannel mFaspayPaymentChannel = new FaspayPaymentChannel();
+    mFaspayPaymentChannel.setPg_code("402");
+    mFaspayPaymentChannel.setPg_name("ALFA");
+
+
+    //list all your items
+    List<FaspayPayment> item = new ArrayList<>();
+    // (#Item name, #amount ,#price, #paymentType, #merchantId , #tenorType)
+    item.add(new FaspayPayment("Item Name", 1, 100000, FaspayPayment.PAYMENT_PLAN_FULL_SETTLEMENT, mFaspayConfig.getFaspayUser().getMerchantId(), FaspayPayment.TENOR_FULL));
+
+    //create bill data
+    // (String billNo,String billDesc, int expired_day_interval, String billTotal,List<FaspayPayment> item) 
+    FaspayPaymentRequestBillData billing = new FaspayPaymentRequestBillData("123123", "x", 10, "10000", item);
+
+    //create bill user data
+    //(String phoneNumber, String email, String terminal, String custNo, String custName)
+    FaspayPaymentRequestUserData mFaspayPaymentRequestUserData = new FaspayPaymentRequestUserData("087123123123", "hil@hil.com", String.valueOf(FaspayPaymentRequestWrapper.TERMINAL_MOBILE_APP_ANDROID), "123123", "hahahaha");
+
+
+    //create shipping data
+    FaspayPaymentRequestShippingData mFaspayPaymentRequestShippingData = new FaspayPaymentRequestShippingData();
+
+    //wrap it up
+    FaspayPaymentRequestWrapper mFaspayPaymentRequestWrapper = new FaspayPaymentRequestWrapper(mFaspayConfig, billing, mFaspayPaymentChannel, mFaspayPaymentRequestUserData, mFaspayPaymentRequestShippingData);
+
+
+    //send to server
+    FaspayPaymentService mFaspayPaymentService = new FaspayPaymentServiceImpl(mFaspayConfig);
+        mFaspayPaymentService.createBilling(mFaspayPaymentRequestWrapper, new FaspayPaymentService.FaspayCreateBillingServiceCallback() {
+            @Override
+            public void onGetPaymentResponse(FaspayPaymentResponse channel) {
+                System.out.println("OK");
+
+                inquiry(channel, mFaspayPaymentService, mFaspayConfig);
+            }
+
+            @Override
+            public void onErrorGetPaymentResponse(Exception e) {
+                System.out.println("ERRO");
+                e.printStackTrace();
+                latch.countDown();
+            }
+
+            @Override
+            public void onUserNotRegistered(UnregisteredError mUnregisteredError) {
+                System.out.println("unreg " + mUnregisteredError.getResponse_error().getResponse_desc());
+                latch.countDown();
+            }
+
         });
 ```
 
