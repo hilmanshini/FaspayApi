@@ -142,8 +142,16 @@ this function is needed for you to create payment
         });
 ```
 
+# IMPORTANT! Faspay Payment Notification
+when users accept payment or cancel payment the notification of payment status are sent to your server , Contact faspay support to register your callback url notification, 
 
-
+your callback controller from your http server  must response the request from faspay in the format that suits faspay needs , 
+the format could be generated with this code in your controller
+```java
+FaspayXMLResponse e = new XmlMapper().readValue((raw), FaspayXMLResponse.class);
+// here your can get property from FaspayXMLResponse to be handled 
+new XmlMapper().writeValue(res, new FaspayTraceSuccessXMLResponse(e));
+```
 
 # Faspay Debit Cancel Payment
 this function is needed for you to cancel payment 
@@ -176,7 +184,7 @@ this function is needed for you to cancel payment
 
 
 # Faspay Debit inquiry Payment
-this function is needed for you to cancel payment 
+this function is needed for you to inquirt payment 
 
 ```java
     //and send it
