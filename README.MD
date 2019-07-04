@@ -83,39 +83,6 @@ service.inquiryPaymentChannel(new FaspayInquiryPCService.FaspayInquiryServiceCal
 
 
 
-# Faspay Debit Service Inquiry Payment Channel
-this function is needed to get payment channel based on your purcahse
-this phase are implementation of class FaspayInquiryPCService to declare, write it as follows:
-
-```java
-FaspayInquiryService service = new FaspayInquiryPCServiceImpl(mFaspayConfig);
-service.inquiryPaymentChannel(new FaspayInquiryPCService.FaspayInquiryServiceCallback() {
-            @Override
-            public void onGetPaymentChannel(List<FaspayPaymentChannel> channel) {
-                for (FaspayPaymentChannel faspayPaymentChannel : channel) {
-                    System.out.println(faspayPaymentChannel.getPg_code() + " " + faspayPaymentChannel.getPg_name());
-
-                }
-
-            }
-
-            @Override
-            public void onErrorGetPaymentChannel(Exception e) {
-                e.printStackTrace();
-
-            }
-
-            @Override
-            public void onUserNotRegistered(UnregisteredError mUnregisteredError) {
-                System.out.println(mUnregisteredError.getResponse_error().getResponse_code());
-
-            }
-        });
-```
-
-
-
-
 # Faspay Debit Create Payment
 this function is needed for you to create payment 
 
@@ -165,17 +132,77 @@ this function is needed for you to create payment
             public void onErrorGetPaymentResponse(Exception e) {
                 System.out.println("ERRO");
                 e.printStackTrace();
-                latch.countDown();
             }
 
             @Override
             public void onUserNotRegistered(UnregisteredError mUnregisteredError) {
                 System.out.println("unreg " + mUnregisteredError.getResponse_error().getResponse_desc());
-                latch.countDown();
             }
 
         });
 ```
+
+
+
+
+# Faspay Debit Cancel Payment
+this function is needed for you to cancel payment 
+
+```java
+    //create inline Wrapper (String trxId,  String billNo, String paymentCancel,FaspayConfigDebit mFaspayConfig)
+    //and send it
+    mFaspayPaymentService.cancelTransaction(new FaspayCancelPaymentRequestWrapper( channel.getTrxId(), channel.getBillNo(), "test", conf), new FaspayPaymentService.FaspayCancelPaymentCallback() {
+            @Override
+            public void onCancelPaymentSuccess(FaspayCancelPaymentResponse channel) {
+                System.out.println("CANCELED " + channel.getPaymentStatusDesc());
+                latch.countDown();
+            }
+
+            @Override
+            public void onErrorRequstCancelPayment(Exception e) {
+                e.printStackTrace();
+                System.out.println("error ");
+                latch.countDown();
+            }
+
+            @Override
+            public void onUserNotRegistered(UnregisteredError mUnregisteredError) {
+                System.out.println("UNREG");
+                latch.countDown();
+            }
+        });
+```
+
+
+
+# Faspay Debit inquiry Payment
+this function is needed for you to cancel payment 
+
+```java
+    //and send it
+    mFaspayPaymentService.inqueryPaymentStatus(new FaspayPaymentStatusRequestWrapper("", channel.getTrxId(), channel.getBillNo(), conf), new FaspayPaymentService.FaspayInquiryPaymentStatusCallback() {
+            @Override
+            public void onGetInquiryPaymentStatusResponse(FaspayPaymentStatusResponse channel) {
+                System.out.println("OK "+channel.getPaymentStatusDesc());
+                latch.countDown();
+                
+            }
+
+            @Override
+            public void onErrorGetInquiryPaymentStatusResponse(Exception e) {
+                e.printStackTrace();
+                System.out.println("ERROR ");
+                latch.countDown();
+            }
+
+            @Override
+            public void onUserNotRegistered(UnregisteredError mUnregisteredError) {
+                System.out.println("UNREG");
+                latch.countDown();
+            }
+        });
+```
+
 
 
 
