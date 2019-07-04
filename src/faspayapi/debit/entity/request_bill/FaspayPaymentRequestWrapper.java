@@ -9,6 +9,7 @@ import faspayapi.debit.entity.request_bill.FaspayPaymentRequestBillData;
 import faspayapi.debit.FaspayConfigDebit;
 import faspayapi.debit.entity.FaspayPaymentChannel;
 import faspayapi.debit.entity.FaspayPaymentRequest;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -82,13 +83,21 @@ public class FaspayPaymentRequestWrapper extends FaspayPaymentRequest {
         setShippingAddressCountryCode(mShippingData.getShipping_address_country_code());
         setItem(billing.getItem());
         setReserve1("");
+        
         setReserve2("");
         setRequest("");
         setPayType(String.valueOf(billing.getPay_type()));
         String userAndPass = new StringBuilder(mFaspayConfig.getFaspayUser().getUserId()).append(mFaspayConfig.getFaspayUser().getPassword()).append(getBillNo()).toString();
-        System.out.println(userAndPass);
-        setSignature(DigestUtils.sha1Hex(DigestUtils.md5Hex(userAndPass)));
+        System.out.println("UPASS "+userAndPass);
+        char[] md5 = Hex.encodeHex(DigestUtils.md5(userAndPass));
+        byte[] data = DigestUtils.sha1(new String(md5));
+        char[] sha1 = Hex.encodeHex(data);
+        setSignature(new String(sha1));
 
+    }
+    public static void main(String[] args) {
+        String e = "1231233";
+        
     }
     
 

@@ -12,7 +12,7 @@ package faspayapi.credit;
 public class TetsUser2 extends FaspayUserCredit{
 
     public TetsUser2() {
-        setMerchantId("commonwealth");
+        setMerchantId("store_faspay");
         setPass("abcde");
     }
     

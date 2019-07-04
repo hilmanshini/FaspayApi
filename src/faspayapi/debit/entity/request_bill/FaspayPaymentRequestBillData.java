@@ -71,6 +71,21 @@ public class FaspayPaymentRequestBillData {
         setItem(item);
     }
     
+    public FaspayPaymentRequestBillData(String billNo,String billDesc, int expired_day_interval, String billTotal,List<FaspayPayment> item,String pay_type) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, expired_day_interval);
+        setBillNo(billNo);
+        setBillDesc(billDesc);
+        setBillDate(sdf.format(new Date()));
+        setBillExpired(sdf.format(cal.getTime()));
+        setBillTotal(billTotal);
+        setItem(item);
+        setPay_type(Integer.valueOf(pay_type));
+        
+    }
+    
     public FaspayPaymentRequestBillData(String billNo,String billDesc, int expired_day_interval, String billTotal,List<FaspayPayment> item) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Calendar cal = Calendar.getInstance();
@@ -82,6 +97,7 @@ public class FaspayPaymentRequestBillData {
         setBillExpired(sdf.format(cal.getTime()));
         setBillTotal(billTotal);
         setItem(item);
+        
     }
     
     public List<FaspayPayment> getItem() {

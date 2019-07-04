@@ -15,8 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "response",
@@ -29,153 +27,147 @@ import java.util.List;
     "payment_status_code",
     "payment_status_desc",
     "response_code",
-    "response_desc"
+    "response_desc",
+    "payment_status_code"
 })
 public class FaspayPaymentStatusResponse {
 
+
+    
+
+    
+    
     @JsonProperty("response")
-    private String response;
+    private Object response;
     @JsonProperty("trx_id")
-    private String trxId;
+    private Object trxId;
     @JsonProperty("merchant_id")
-    private String merchantId;
+    private Object merchantId;
     @JsonProperty("merchant")
-    private String merchant;
+    private Object merchant;
     @JsonProperty("bill_no")
-    private String billNo;
+    private Object billNo;
     @JsonProperty("payment_reff")
-    private List<String> paymentReff;
+    private Object paymentReff;
     @JsonProperty("payment_date")
-    private List<String> paymentDate;
+    private Object paymentDate;
     @JsonProperty("payment_status_code")
-    private String paymentStatusCode;
+    private Object paymentStatusCode;
     @JsonProperty("payment_status_desc")
-    private String paymentStatusDesc;
+    private Object paymentStatusDesc;
     @JsonProperty("response_code")
-    private String responseCode;
+    private Object responseCode;
     @JsonProperty("response_desc")
-    private String responseDesc;
+    private Object responseDesc;
+    @JsonProperty("payment_total")
+    private Object payment_total;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("response")
-    public String getResponse() {
+    public Object getResponse() {
         return response;
     }
 
-    @JsonProperty("response")
-    public void setResponse(String response) {
+    public Object getPayment_total() {
+        return payment_total;
+    }
+
+    public void setPayment_total(Object payment_total) {
+        this.payment_total = payment_total;
+    }
+
+    public void setResponse(Object response) {
         this.response = response;
     }
 
-    @JsonProperty("trx_id")
-    public String getTrxId() {
+    public Object getTrxId() {
         return trxId;
     }
 
-    @JsonProperty("trx_id")
-    public void setTrxId(String trxId) {
+    public void setTrxId(Object trxId) {
         this.trxId = trxId;
     }
 
-    @JsonProperty("merchant_id")
-    public String getMerchantId() {
+    public Object getMerchantId() {
         return merchantId;
     }
 
-    @JsonProperty("merchant_id")
-    public void setMerchantId(String merchantId) {
+    public void setMerchantId(Object merchantId) {
         this.merchantId = merchantId;
     }
 
-    @JsonProperty("merchant")
-    public String getMerchant() {
+    public Object getMerchant() {
         return merchant;
     }
 
-    @JsonProperty("merchant")
-    public void setMerchant(String merchant) {
+    public void setMerchant(Object merchant) {
         this.merchant = merchant;
     }
 
-    @JsonProperty("bill_no")
-    public String getBillNo() {
+    public Object getBillNo() {
         return billNo;
     }
 
-    @JsonProperty("bill_no")
-    public void setBillNo(String billNo) {
+    public void setBillNo(Object billNo) {
         this.billNo = billNo;
     }
 
-    public List<String> getPaymentReff() {
+    public Object getPaymentReff() {
         return paymentReff;
     }
 
-    public void setPaymentReff(List<String> paymentReff) {
+    public void setPaymentReff(Object paymentReff) {
         this.paymentReff = paymentReff;
     }
 
-    public List<String> getPaymentDate() {
+    public Object getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(List<String> paymentDate) {
+    public void setPaymentDate(Object paymentDate) {
         this.paymentDate = paymentDate;
     }
 
-    
-
-    
-
-    @JsonProperty("payment_status_code")
-    public String getPaymentStatusCode() {
+    public Object getPaymentStatusCode() {
         return paymentStatusCode;
     }
 
-    @JsonProperty("payment_status_code")
-    public void setPaymentStatusCode(String paymentStatusCode) {
+    public void setPaymentStatusCode(Object paymentStatusCode) {
         this.paymentStatusCode = paymentStatusCode;
     }
 
-    @JsonProperty("payment_status_desc")
-    public String getPaymentStatusDesc() {
+    public Object getPaymentStatusDesc() {
         return paymentStatusDesc;
     }
 
-    @JsonProperty("payment_status_desc")
-    public void setPaymentStatusDesc(String paymentStatusDesc) {
+    public void setPaymentStatusDesc(Object paymentStatusDesc) {
         this.paymentStatusDesc = paymentStatusDesc;
     }
 
-    @JsonProperty("response_code")
-    public String getResponseCode() {
+    public Object getResponseCode() {
         return responseCode;
     }
 
-    @JsonProperty("response_code")
-    public void setResponseCode(String responseCode) {
+    public void setResponseCode(Object responseCode) {
         this.responseCode = responseCode;
     }
 
-    @JsonProperty("response_desc")
-    public String getResponseDesc() {
+    public Object getResponseDesc() {
         return responseDesc;
     }
 
-    @JsonProperty("response_desc")
-    public void setResponseDesc(String responseDesc) {
+    public void setResponseDesc(Object responseDesc) {
         this.responseDesc = responseDesc;
     }
 
-    @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+        return additionalProperties;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
     }
+
+    
 
 }

@@ -7,6 +7,7 @@ package faspayapi.credit.entity.payment.wrapper;
 
 import faspayapi.credit.FaspayUserCredit;
 import java.text.DecimalFormat;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -42,7 +43,8 @@ public class FaspayPaymentCreditTransactionData {
         System.out.println("SIG "+getAmount()+" "+getMerchant_tranid());
         signature = sb.append("##").append(usr.getMerchantId().toUpperCase()).append("##").append(usr.getPass().toUpperCase()).append("##").append(getMerchant_tranid()).append("##").append(decimalFormat.format(getAmount())).append("##0##").toString();
         System.out.println("all "+signature);
-        return DigestUtils.sha1Hex(signature);
+        return new String(Hex.encodeHex(DigestUtils.sha1(signature)));
+        
     }
 
     public void setSignature(String signature) {

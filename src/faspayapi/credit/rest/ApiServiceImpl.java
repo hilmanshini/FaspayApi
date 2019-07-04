@@ -26,6 +26,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import okio.Timeout;
 import org.json.JSONObject;
 
@@ -228,7 +229,14 @@ public abstract class ApiServiceImpl<T> implements ApiService{
                 .url(url)
                 .post(d)
                 .build();
-
+         final Buffer buffer = new Buffer();
+//        try {
+//            request.body().writeTo(buffer);
+//        } catch (IOException ex) {
+//            Logger.getLogger(ApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        LOG.info(String.format("-> full send %s ",buffer.readUtf8()));
+                
         mClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException ioe) {

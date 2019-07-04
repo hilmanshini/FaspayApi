@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import faspayapi.debit.FaspayConfigDebit;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -23,9 +24,10 @@ import org.apache.commons.codec.digest.DigestUtils;
     "merchant_id",
     "bill_no",
     "signature"
+        
 })
 public class FaspayPaymentStatusRequestWrapper extends FaspayPaymentStatusRequest {
-
+    
     public FaspayPaymentStatusRequestWrapper(String request, String trxId, String bill_no, FaspayConfigDebit mFaspayConfig) {
 
         String userAndPass = new StringBuilder(mFaspayConfig.getFaspayUser().getUserId()).append(mFaspayConfig.getFaspayUser().getPassword()).append(bill_no).toString();
@@ -33,7 +35,10 @@ public class FaspayPaymentStatusRequestWrapper extends FaspayPaymentStatusReques
         setTrxId(trxId);
         setBillNo(bill_no);
         setMerchantId(mFaspayConfig.getFaspayUser().getMerchantId());
-        setSignature(DigestUtils.sha1Hex(DigestUtils.md5Hex(userAndPass)));
+        char[] md5 = Hex.encodeHex(DigestUtils.md5(userAndPass));
+        byte[] data = DigestUtils.sha1(new String(md5));
+        char[] sha1 = Hex.encodeHex(data);
+        setSignature(new String(sha1));
 
     }
 

@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import faspayapi.credit.entity.inquiry.InquiryRequestCredit;
 import faspayapi.credit.entity.inquiry.InquiryResponseCredit;
 import faspayapi.credit.entity.payment.FaspayPaymentCreditDev;
+import faspayapi.credit.entity.void_transaction.VoidRequestCredit;
+import faspayapi.credit.entity.void_transaction.VoidResponseCredit;
 
 import faspayapi.debit.FaspayConfigDebit;
 import faspayapi.debit.FaspayConfigDebitDev;
@@ -31,11 +33,19 @@ import org.json.JSONObject;
  */
 public interface FaspayCreditService {
     void inquiry(InquiryRequestCredit credit,InquiryPaymentCallback callback);
+    void voidTransaction(VoidRequestCredit requestCredit,VoidPaymentCallback callback);
     public interface InquiryPaymentCallback {
         
         void onErrorGetResponseInquiryPaymentCredit(Exception E);
 
         public void onGetResponseInquiryPaymentCredit(InquiryResponseCredit clas);
+    }
+    
+    public interface VoidPaymentCallback {
+        
+        void onErrorVoidPaymentCallback(Exception E);
+
+        public void onVoidSuucess(VoidResponseCredit responseCredit);
     }
     
 }

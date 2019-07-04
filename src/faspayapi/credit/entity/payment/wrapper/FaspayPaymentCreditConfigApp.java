@@ -10,11 +10,11 @@ package faspayapi.credit.entity.payment.wrapper;
  * @author hilmananwarsah
  */
 public class FaspayPaymentCreditConfigApp {
-    String response_type;
-    String return_url;
-    String mparam1;
-    String mparam2;
-    String frisk1,frisk2;
+    private String response_type;
+    private String return_url;
+    private String mparam1;
+    private String mparam2;
+    private String frisk1,frisk2;
     private String handshake_url;
     private String handshake_param;
 

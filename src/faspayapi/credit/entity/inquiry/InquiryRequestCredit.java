@@ -5,6 +5,14 @@
  */
 package faspayapi.credit.entity.inquiry;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import faspayapi.credit.FaspayConfigCredit;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONObject;
+
 /**
  *
  * @author hilmananwarsah
@@ -16,13 +24,18 @@ public class InquiryRequestCredit {
     String merchantid;
     String payment_method;
     String merchant_tranid;
-    String transactionid;
+    String signature;
     String amount;
+    FaspayConfigCredit configCredit;
+
+    public InquiryRequestCredit(FaspayConfigCredit configCredit) {
+        this.configCredit = configCredit;
+    }
 
     public void setTransactiontype(String transactiontype) {
         this.transactiontype = transactiontype;
     }
-    String signature;
+    
 
     public String getResponse_type() {
         return response_type;
@@ -56,13 +69,7 @@ public class InquiryRequestCredit {
         this.merchant_tranid = merchant_tranid;
     }
 
-    public String getTransactionid() {
-        return transactionid;
-    }
-
-    public void setTransactionid(String transactionid) {
-        this.transactionid = transactionid;
-    }
+    
 
     public String getAmount() {
         return amount;
@@ -98,6 +105,43 @@ public class InquiryRequestCredit {
 
     public String getTransactiontype() {
         return transactiontype;
+    }
+
+    public String generateHtml() {
+        try {
+            String json = new ObjectMapper().writeValueAsString(this);
+            JSONObject o = new JSONObject(json);
+            Iterator<String> e = o.keys();
+            StringBuilder sb = new StringBuilder("<form method=\"post\" name=\"form\" action=\"" + configCredit.getMerchantInquiryUrl() + "\">");
+            while (e.hasNext()) {
+                String next = e.next();
+                String val = "";
+                if (!o.isNull(next)) {
+                    try {
+                        val = o.getString(next);
+                    } catch (Exception ex) {
+                    }
+
+                } else {
+                    val = "";
+                }
+                //           System.out.println(next+" "+val);
+
+                sb = sb.append("\n");
+                sb = sb.append("<input type=\"hidden\" name=\"");
+                sb = sb.append(next.toUpperCase());
+                sb = sb.append("\" value=\"");
+                sb = sb.append(val);
+                sb = sb.append("\">");
+
+            }
+            sb = sb.append("\n</form>");
+            sb = sb.append("<script> document.form.submit();</script>");
+            return sb.toString();
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(InquiryRequestCredit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
     }
 
 }

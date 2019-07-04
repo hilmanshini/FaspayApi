@@ -19,7 +19,10 @@ import faspayapi.credit.entity.payment.wrapper.FaspayPaymentCreditShopperData;
 import faspayapi.credit.entity.payment.wrapper.FaspayPaymentCreditTransactionData;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,8 +33,6 @@ import org.json.JSONObject;
  * @author hilmananwarsah
  */
 public abstract class FaspayPaymentCredit {
-
-    private String transactiontype = "1";
 
     public String getTransactiontype() {
         return transactiontype;
@@ -55,23 +56,6 @@ public abstract class FaspayPaymentCredit {
     private String merchant_tranid;
     private String txn_password;
     private String lang;
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public String getTxn_password() {
-        return txn_password;
-    }
-
-    public void setTxn_password(String txn_password) {
-        this.txn_password = txn_password;
-    }
-
     private String currencycode;
     private String amount;
     private String signature;
@@ -138,6 +122,24 @@ public abstract class FaspayPaymentCredit {
     private String card_bill_addr_state;
     private String card_bill_addr_country_code;
     private String card_email;
+    private String transactiontype = "1";
+    
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getTxn_password() {
+        return txn_password;
+    }
+
+    public void setTxn_password(String txn_password) {
+        this.txn_password = txn_password;
+    }
+    
 
     public String getPayment_method() {
         return payment_method;
@@ -707,16 +709,18 @@ public abstract class FaspayPaymentCredit {
     public String generateHtml() {
 
         try {
-
+            System.out.println(getCard_issuer_bank());
             JSONObject o = new JSONObject(new ObjectMapper().writeValueAsString(this));
 
             o.remove("cardno");
             o.remove("CARDNO");
 
             Iterator<String> e = o.keys();
+            List<String> d = new ArrayList<String>(o.keySet());
+            Collections.sort(d);
             StringBuilder sb = new StringBuilder("<form method=\"post\" name=\"form\" action=\"" + getUrl() + "\">");
-            while (e.hasNext()) {
-                String next = e.next();
+            for (String next : d) {
+//                String next = e.next();
                 String val;
                 if (!o.isNull(next)) {
                     val = o.getString(next);
@@ -731,8 +735,8 @@ public abstract class FaspayPaymentCredit {
                 sb = sb.append("\" value=\"");
                 sb = sb.append(val);
                 sb = sb.append("\">");
-
             }
+
             sb = sb.append("\n</form>");
             sb = sb.append("<script> document.form.submit();</script>");
 

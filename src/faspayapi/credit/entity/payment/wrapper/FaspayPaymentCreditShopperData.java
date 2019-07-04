@@ -13,19 +13,19 @@ import java.text.DecimalFormat;
  */
 public class FaspayPaymentCreditShopperData {
 
-    String custname;
-    String custemail;
-    String shopper_ip;
-    String description;
-    String cardno;
-    String cardname;
-    char cardtype;
-    String expirymonth;
-    String expiryyear;
-    String cardcvc;
-    String card_issuer_bank_country_code;
-    String phone_no;
-    String customer_ref;
+    private String custname;
+    private String custemail;
+    private String shopper_ip;
+    private String description;
+    private String cardno;
+    private String cardname;
+    private char cardtype;
+    private String expirymonth;
+    private String expiryyear;
+    private String cardcvc;
+    private String card_issuer_bank_country_code;
+    private String phone_no;
+    private String customer_ref;
 
     public String getCustomer_ref() {
         return customer_ref;

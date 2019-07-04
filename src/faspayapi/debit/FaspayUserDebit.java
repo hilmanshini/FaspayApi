@@ -5,6 +5,7 @@
  */
 package faspayapi.debit;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -77,7 +78,11 @@ import org.apache.commons.codec.digest.DigestUtils;
     public String calculateSignature() {
         String userAndPass = new StringBuilder(userId).append(password).toString();
         System.out.println(userAndPass);
-        return DigestUtils.sha1Hex(DigestUtils.md5Hex(userAndPass));
+        char[] md5 = Hex.encodeHex(DigestUtils.md5(userAndPass));
+        byte[] data = DigestUtils.sha1(new String(md5));
+        char[] sha1 = Hex.encodeHex(data);
+        return (new String(sha1));
+        
     }
 
 }

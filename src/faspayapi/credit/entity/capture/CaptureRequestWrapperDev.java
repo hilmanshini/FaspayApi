@@ -7,6 +7,7 @@ package faspayapi.credit.entity.capture;
 
 import faspayapi.credit.FaspayUserCredit;
 import java.text.DecimalFormat;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.cli.Digest;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -14,7 +15,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  *
  * @author hilmananwarsah
  */
-public class CaptureRequestWrapperDev extends CaptureRequest{
+public class CaptureRequestWrapperDev extends CaptureRequest {
 
     public CaptureRequestWrapperDev(FaspayUserCredit user, String MERCHANT_TRANID, String TRANSACTIONID, long AMOUNT, String CUSTNAME, String CUSTEMAIL, String DESCRIPTION, String RETURN_URL) {
         this.merchantid = user.getMerchantId();
@@ -26,16 +27,15 @@ public class CaptureRequestWrapperDev extends CaptureRequest{
         this.custemail = CUSTEMAIL;
         this.description = DESCRIPTION;
         this.return_url = RETURN_URL;
-    String raw = new StringBuilder().append("##").append(user.getMerchantId().toUpperCase()).append("##").append(user.getPass().toUpperCase()).append("##").append(merchant_tranid).append("##").append(getAmount()).append("##").append(TRANSACTIONID).append("##").toString();
+        String raw = new StringBuilder().append("##").append(user.getMerchantId().toUpperCase()).append("##").append(user.getPass().toUpperCase()).append("##").append(merchant_tranid).append("##").append(getAmount()).append("##").append(TRANSACTIONID).append("##").toString();
         System.out.println(raw);
-        this.signature =  DigestUtils.sha1Hex(raw);
+        this.signature =  new String(Hex.encodeHex(DigestUtils.sha1(raw)));
+        
     }
 
     @Override
     String getUrl() {
-        return  "https://fpgdev.faspay.co.id/payment/api";
+        return "https://fpgdev.faspay.co.id/payment/api";
     }
-    
-    
-    
+
 }

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import faspayapi.debit.FaspayConfigDebit;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 
@@ -82,8 +83,10 @@ public class FaspayCancelPaymentRequestWrapper extends FaspayCancelPaymentReques
         setMerchantId(mFaspayPaymentResponse.getMerchantId());
         setPaymentCancel(desc);
         String userAndPass = new StringBuilder(mFaspayConfig.getFaspayUser().getUserId()).append(mFaspayConfig.getFaspayUser().getPassword()).append(getBillNo()).toString();
-        System.out.println(userAndPass);
-        setSignature(DigestUtils.sha1Hex(DigestUtils.md5Hex(userAndPass)));
+        char[] md5 = Hex.encodeHex(DigestUtils.md5(userAndPass));
+        byte[] data = DigestUtils.sha1(new String(md5));
+        char[] sha1 = Hex.encodeHex(data);
+        setSignature(new String(sha1));
     }
     
     

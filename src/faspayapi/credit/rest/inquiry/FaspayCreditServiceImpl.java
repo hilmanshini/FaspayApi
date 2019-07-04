@@ -15,9 +15,12 @@ import faspayapi.credit.TetsUser2;
 import faspayapi.credit.entity.inquiry.InquiryRequestCredit;
 import faspayapi.credit.entity.inquiry.InquiryRequestCreditWrapper;
 import faspayapi.credit.entity.inquiry.InquiryResponseCredit;
+import faspayapi.credit.entity.void_transaction.VoidRequestCredit;
+import faspayapi.credit.entity.void_transaction.VoidResponseCredit;
 import faspayapi.credit.rest.ApiServiceImpl;
 import faspayapi.debit.entity.err.UnregisteredError;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,22 +34,23 @@ import org.json.JSONObject;
  *
  * @author hilmananwarsah
  */
-public class FaspayCreditServiceImpl extends ApiServiceImpl<Object> implements FaspayCreditService{
-
+public class FaspayCreditServiceImpl extends ApiServiceImpl<Object> implements FaspayCreditService {
+    
     public FaspayCreditServiceImpl(FaspayConfigCredit mFaspayConfig) {
         super(mFaspayConfig);
     }
-
+    
     @Override
-    public void inquiry(InquiryRequestCredit credit,InquiryPaymentCallback callback) {
+    public void inquiry(InquiryRequestCredit credit, InquiryPaymentCallback callback) {
         try {
             JSONObject p = new JSONObject(new ObjectMapper().writeValueAsString(credit));
             Iterator<String> keys = p.keys();
-            Map<String,String> data = new HashMap();
+            Map<String, String> data = new HashMap();
             while (keys.hasNext()) {
                 String next = keys.next();
+                
                 try {
-                data.put(next.toUpperCase(), p.getString(next));    
+                    data.put(next.toUpperCase(), URLEncoder.encode(data.get(next), "utf-8"));
                 } catch (Exception e) {
                 }
                 
@@ -55,9 +59,9 @@ public class FaspayCreditServiceImpl extends ApiServiceImpl<Object> implements F
             sendRequestHttpPlain(getFaspayConfig().getMerchantInquiryUrl(), data, new ApiServiceCallbackPlain() {
                 @Override
                 public void onFailure(Call call, IOException ioe) {
-                    
+                    callback.onErrorGetResponseInquiryPaymentCredit(ioe);
                 }
-
+                
                 @Override
                 public void onResponse(String t) {
                     JSONObject data = new JSONObject();
@@ -65,8 +69,8 @@ public class FaspayCreditServiceImpl extends ApiServiceImpl<Object> implements F
                     for (String string : x) {
                         
                         String[] y = string.split("=");
-                        if(y.length == 2){
-                            data.put(y[0],y[1]);
+                        if (y.length == 2) {
+                            data.put(y[0], y[1]);
                         }
                         
                     }
@@ -79,7 +83,6 @@ public class FaspayCreditServiceImpl extends ApiServiceImpl<Object> implements F
                     }
                     
                 }
-
                 
             });
         } catch (JsonProcessingException ex) {
@@ -88,26 +91,69 @@ public class FaspayCreditServiceImpl extends ApiServiceImpl<Object> implements F
         }
         
     }
-
     
     public static void main(String[] args) {
         FaspayConfigCredit conf = new FaspayConfigCreditDev();
         FaspayUserCredit credit = new TetsUser2();
-        new FaspayCreditServiceImpl(conf).inquiry(new InquiryRequestCreditWrapper(credit, "DEA32491-4545-4DA7-8ED5-AB5ECAF6C8AD", "2ccb26d48b6c428ba8ba69cdb5558197", 100000),new InquiryPaymentCallback() {
-            
-
-            @Override
-            public void onErrorGetResponseInquiryPaymentCredit(Exception E) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            
-            @Override
-            public void onGetResponseInquiryPaymentCredit(InquiryResponseCredit clas) {
-                System.out.println(clas.getTXNSTATUS());
-            }
-        });
+        
     }
- 
+    
+    @Override
+    public void voidTransaction(VoidRequestCredit requestCredit, VoidPaymentCallback callback) {
+        
+        JSONObject o;
+        
+        try {
+            o = new JSONObject(new ObjectMapper().writeValueAsString(requestCredit));
+            Iterator<String> e = o.keys();
+            Map<String, String> data = new HashMap<>();
+            while (e.hasNext()) {
+                String next = e.next();
+                String val;
+                if (!o.isNull(next)) {
+                    val = o.getString(next);
+                } else {
+                    val = "";
+                }
+                data.put(next.toUpperCase(), val);
+                //           System.out.println(next+" "+val);
+            }
+            sendRequestHttpPlain(requestCredit.getUrl(), data, new ApiServiceCallbackPlain() {
+                @Override
+                public void onFailure(Call call, IOException ioe) {
+                    System.out.println("ERR");
+                    callback.onErrorVoidPaymentCallback(ioe);
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+                
+                @Override
+                public void onResponse(String t) {
+//                    try {
+//                        System.out.println("ok");
+//                        String[] d = t.split(";");
+//                        JSONObject data = new JSONObject();
+//                        for (String string : d) {
+//                            String[] kv = string.split("=");
+//                            if (kv.length == 0) {
+//                                data.put(kv[0], "");
+//                            } else {
+//                                data.put(kv[0], kv[1]);
+//                            }
+//                            
+//                        }
+//                        VoidResponseCredit voidResponseCredit = new ObjectMapper().readValue(data.toString(), VoidResponseCredit.class);
+//                        callback.onVoidSuucess(voidResponseCredit);
+////                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                    } catch (IOException ex) {
+//                        callback.onErrorVoidPaymentCallback(ex);
+//                        Logger.getLogger(FaspayCreditServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+                }
+            });
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(FaspayCreditServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
     
 }

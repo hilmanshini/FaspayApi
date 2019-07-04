@@ -8,6 +8,7 @@ package faspayapi.credit.entity.capture;
 import faspayapi.credit.FaspayUserCredit;
 import faspayapi.credit.TetsUser;
 import java.text.DecimalFormat;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.cli.Digest;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -29,7 +30,7 @@ public class CaptureRequestWrapperProd extends CaptureRequest {
         this.return_url = RETURN_URL;
         String raw = new StringBuilder().append("##").append(user.getMerchantId().toUpperCase()).append("##").append(user.getPass().toUpperCase()).append("##").append(merchant_tranid).append("##").append(getAmount()).append("##").append(TRANSACTIONID).append("##").toString();
         System.out.println(raw);
-        this.signature = DigestUtils.sha1Hex(raw);
+        this.signature =  new String(Hex.encodeHex(DigestUtils.sha1(raw)));
     }
 
     @Override

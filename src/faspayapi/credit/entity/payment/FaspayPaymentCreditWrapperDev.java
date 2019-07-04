@@ -608,6 +608,15 @@ public class FaspayPaymentCreditWrapperDev extends FaspayPaymentCreditDev {
         itemData.setMref10(mref10);
     }
 
+    
+    public String getTxn_password() {
+        return user.getPass();
+    }
+
+    public void setTxn_password(String txn_password) {
+
+    }
+
     public static void main(String[] args) {
         FaspayUserCredit usr = new TetsUser2();
 
@@ -649,14 +658,6 @@ public class FaspayPaymentCreditWrapperDev extends FaspayPaymentCreditDev {
         } catch (Exception ex) {
             Logger.getLogger(FaspayPaymentCreditWrapperDev.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-    }
-
-    public String getTxn_password() {
-        return user.getPass();
-    }
-
-    public void setTxn_password(String txn_password) {
 
     }
 

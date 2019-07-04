@@ -8,7 +8,10 @@ package faspayapi.credit.entity.capture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faspayapi.credit.entity.payment.FaspayPaymentCreditWrapperDev;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
@@ -139,10 +142,11 @@ public abstract class CaptureRequest {
             
             
 
-            Iterator<String> e = o.keys();
+            
             StringBuilder sb = new StringBuilder("<form method=\"post\" name=\"form\" action=\""+getUrl()+"\">");
-            while (e.hasNext()) {
-                String next = e.next();
+            List<String> d = new ArrayList(o.keySet());
+            Collections.sort(d);
+            for (String next : d) {
                 String val;
                 if (!o.isNull(next)) {
                     val = o.getString(next);
@@ -157,8 +161,9 @@ public abstract class CaptureRequest {
                 sb = sb.append("\" value=\"");
                 sb = sb.append(val);
                 sb = sb.append("\">");
-
             }
+            
+            
             sb = sb.append("\n</form>");
             sb = sb.append("<script> document.form.submit();</script>");
 

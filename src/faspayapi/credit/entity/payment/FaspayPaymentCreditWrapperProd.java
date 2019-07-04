@@ -35,6 +35,7 @@ public class FaspayPaymentCreditWrapperProd extends FaspayPaymentCreditProd {
     FaspayPaymentCreditCardData cardData;
 
     public FaspayPaymentCreditWrapperProd(FaspayUserCredit user, FaspayPaymentCreditTransactionData transactionData, FaspayPaymentCreditShopperData shopperData, FaspayPaymentCreditConfigApp app, FaspayPaymentCreditBillData billData, FaspayPaymentCreditShippingdata shippingdata, FaspayPaymentCreditItemData itemData, FaspayPaymentCreditDomicileData domicileData, FaspayPaymentCreditCardData cardData) {
+        this.cardData = cardData;
         this.domicileData = domicileData;
         this.shippingdata = shippingdata;
         this.itemData = itemData;
